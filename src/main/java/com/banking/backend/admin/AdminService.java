@@ -63,6 +63,13 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
+    public AdminTransactionDetailDto getTransaction(Long id) {
+        Transaction tx = transactionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Transaction not found"));
+        return AdminTransactionDetailDto.from(tx);
+    }
+
+    @Transactional(readOnly = true)
     public Page<TransactionDto> listTransactions(TransactionFilter filter, Pageable pageable) {
         return transactionRepository
                 .findAll(TransactionSpecification.forFilter(filter, null), pageable)

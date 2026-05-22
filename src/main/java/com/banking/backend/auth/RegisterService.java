@@ -1,12 +1,12 @@
 package com.banking.backend.auth;
 
 import com.banking.backend.account.AccountService;
+import com.banking.backend.account.AccountType;
 import com.banking.backend.customer.Customer;
 import com.banking.backend.customer.CustomerRepository;
 import com.banking.backend.customer.CustomerRole;
 import com.banking.backend.customer.CustomerStatus;
 import com.banking.backend.security.JwtService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,18 +21,15 @@ public class RegisterService {
     private final AccountService accountService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final long expirationMs;
 
     public RegisterService(CustomerRepository customerRepository,
                            AccountService accountService,
                            PasswordEncoder passwordEncoder,
-                           JwtService jwtService,
-                           @Value("${app.jwt.expiration-ms}") long expirationMs) {
+                           JwtService jwtService) {
         this.customerRepository = customerRepository;
         this.accountService = accountService;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
-        this.expirationMs = expirationMs;
     }
 
     @Transactional
@@ -50,12 +47,15 @@ public class RegisterService {
         customer.setPasswordHash(passwordEncoder.encode(req.password()));
         customer = customerRepository.save(customer);
 
-        accountService.create(customer, "ILS");
+        accountService.create(customer, "ILS", AccountType.CURRENT);
 
-        String token = jwtService.generateToken(customer.getCustomerNo(), customer.getRole().name());
+        String access = jwtService.generateToken(customer.getCustomerNo(), customer.getRole().name());
+        String refresh = jwtService.generateRefreshToken(customer.getCustomerNo());
         return new LoginResponse(
-                token,
-                Instant.now().plusMillis(expirationMs),
+                access,
+                Instant.now().plusMillis(jwtService.getAccessExpirationMs()),
+                refresh,
+                Instant.now().plusMillis(jwtService.getRefreshExpirationMs()),
                 customer.getCustomerNo(),
                 customer.getFullName(),
                 customer.getRole());

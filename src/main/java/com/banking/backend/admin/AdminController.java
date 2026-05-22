@@ -47,6 +47,11 @@ public class AdminController {
         return ResponseEntity.ok(adminService.updateStatus(id, request));
     }
 
+    @GetMapping("/transactions/{id}")
+    public ResponseEntity<AdminTransactionDetailDto> getTransaction(@PathVariable Long id) {
+        return ResponseEntity.ok(adminService.getTransaction(id));
+    }
+
     @GetMapping("/transactions")
     public ResponseEntity<Page<TransactionDto>> listTransactions(
             @RequestParam(required = false) Long accountId,

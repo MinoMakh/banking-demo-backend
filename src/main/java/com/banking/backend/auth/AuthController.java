@@ -2,9 +2,12 @@ package com.banking.backend.auth;
 
 import com.banking.backend.customer.Customer;
 import com.banking.backend.customer.CustomerRepository;
+import com.banking.backend.customer.CustomerStatus;
 import com.banking.backend.security.JwtService;
+import io.jsonwebtoken.JwtException;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,18 +26,15 @@ public class AuthController {
     private final JwtService jwtService;
     private final CustomerRepository customerRepository;
     private final RegisterService registerService;
-    private final long expirationMs;
 
     public AuthController(AuthenticationManager authenticationManager,
                           JwtService jwtService,
                           CustomerRepository customerRepository,
-                          RegisterService registerService,
-                          @Value("${app.jwt.expiration-ms}") long expirationMs) {
+                          RegisterService registerService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.customerRepository = customerRepository;
         this.registerService = registerService;
-        this.expirationMs = expirationMs;
     }
 
     @PostMapping("/register")
@@ -48,11 +48,46 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(request.customerNo(), request.password()));
 
         Customer customer = customerRepository.findByCustomerNo(request.customerNo()).orElseThrow();
+        return ResponseEntity.ok(buildLoginResponse(customer));
+    }
 
-        String token = jwtService.generateToken(customer.getCustomerNo(), customer.getRole().name());
-        Instant expiresAt = Instant.now().plusMillis(expirationMs);
+    @PostMapping("/refresh")
+    public ResponseEntity<RefreshResponse> refresh(@Valid @RequestBody RefreshRequest request) {
+        String customerNo;
+        try {
+            if (!jwtService.isRefreshToken(request.refreshToken())) {
+                throw new BadCredentialsException("Not a refresh token");
+            }
+            customerNo = jwtService.extractCustomerNo(request.refreshToken());
+        } catch (JwtException e) {
+            throw new BadCredentialsException("Invalid refresh token");
+        }
 
-        return ResponseEntity.ok(new LoginResponse(
-                token, expiresAt, customer.getCustomerNo(), customer.getFullName(), customer.getRole()));
+        Customer customer = customerRepository.findByCustomerNo(customerNo)
+                .orElseThrow(() -> new BadCredentialsException("Customer not found"));
+        if (customer.getStatus() != CustomerStatus.ACTIVE) {
+            throw new DisabledException("Account is disabled");
+        }
+
+        String access = jwtService.generateToken(customer.getCustomerNo(), customer.getRole().name());
+        String refresh = jwtService.generateRefreshToken(customer.getCustomerNo());
+        return ResponseEntity.ok(new RefreshResponse(
+                access,
+                Instant.now().plusMillis(jwtService.getAccessExpirationMs()),
+                refresh,
+                Instant.now().plusMillis(jwtService.getRefreshExpirationMs())));
+    }
+
+    private LoginResponse buildLoginResponse(Customer customer) {
+        String access = jwtService.generateToken(customer.getCustomerNo(), customer.getRole().name());
+        String refresh = jwtService.generateRefreshToken(customer.getCustomerNo());
+        return new LoginResponse(
+                access,
+                Instant.now().plusMillis(jwtService.getAccessExpirationMs()),
+                refresh,
+                Instant.now().plusMillis(jwtService.getRefreshExpirationMs()),
+                customer.getCustomerNo(),
+                customer.getFullName(),
+                customer.getRole());
     }
 }

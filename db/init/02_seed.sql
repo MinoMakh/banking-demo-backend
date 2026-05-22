@@ -4,11 +4,11 @@ INSERT INTO customers (customer_no, full_name, mobile, status, role, password_ha
   ('C001', 'Ali Makhlouf', '+970590000001', 'ACTIVE', 'USER',
    '$2a$10$H8oa9yPVpHtFAAX0sTp0tu7YO6lXx9EdcsmuP49r5kbHGdDtzS5TS'),
   ('A001', 'Bank Admin',   '+970590009999', 'ACTIVE', 'ADMIN',
-   '$2a$10$FSuCf5G7WBzF2qJ8P5M2f./d/eJVHbNvw8HVHwzElyzWqFpQqPU0m');
+   '$2a$10$H8oa9yPVpHtFAAX0sTp0tu7YO6lXx9EdcsmuP49r5kbHGdDtzS5TS');
 
-INSERT INTO accounts (account_no, customer_id, balance, currency) VALUES
-  ('ACC1001', 1, 12450.7500, 'ILS'),
-  ('ACC1002', 1,  2300.0000, 'USD');
+INSERT INTO accounts (account_no, customer_id, balance, currency, account_type, iban, status, opened_at) VALUES
+  ('ACC1001', 1, 12450.7500, 'ILS', 'CURRENT', 'IL300100010000000001001', 'ACTIVE', '2025-09-01 09:00:00'),
+  ('ACC1002', 1,  2300.0000, 'USD', 'SAVINGS', 'IL030100010000000001002', 'ACTIVE', '2025-12-15 14:00:00');
 
 INSERT INTO transactions (transaction_ref, account_id, type, amount, status, transaction_date) VALUES
   ('TX20260220-001', 1, 'CREDIT',  5000.0000, 'SUCCESS', '2026-02-20 09:14:00'),

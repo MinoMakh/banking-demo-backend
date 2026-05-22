@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "accounts")
@@ -34,6 +35,20 @@ public class Account {
 
     @Column(nullable = false, length = 3)
     private String currency;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "account_type", nullable = false)
+    private AccountType accountType;
+
+    @Column(nullable = false, length = 34, unique = true)
+    private String iban;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AccountStatus status;
+
+    @Column(name = "opened_at", nullable = false)
+    private LocalDateTime openedAt;
 
     @Transient
     public BigDecimal getAvailableBalance() {

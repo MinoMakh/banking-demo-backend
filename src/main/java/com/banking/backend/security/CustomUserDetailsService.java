@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.banking.backend.customer.Customer;
 import com.banking.backend.customer.CustomerRepository;
+import com.banking.backend.customer.CustomerStatus;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -25,9 +26,11 @@ public class CustomUserDetailsService implements UserDetailsService {
       Customer customer = customerRepository.findByCustomerNo(username)
             .orElseThrow(() -> new UsernameNotFoundException(username));
 
+      boolean enabled = customer.getStatus() == CustomerStatus.ACTIVE;
       return new User(
          customer.getCustomerNo(),
          customer.getPasswordHash(),
+         enabled, true, true, true,
          List.of(new SimpleGrantedAuthority("ROLE_" + customer.getRole().name())));
    }
 }

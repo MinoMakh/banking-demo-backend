@@ -22,6 +22,6 @@ public class AccountController {
     @PostMapping
     public ResponseEntity<AccountSummaryDto> create(@Valid @RequestBody CreateAccountRequest request) {
         String customerNo = SecurityContextHolder.getContext().getAuthentication().getName();
-        return ResponseEntity.ok(accountService.openAccount(customerNo, request.currency()));
+        return ResponseEntity.ok(accountService.openAccount(customerNo, request.currency(), request.accountType()));
     }
 }

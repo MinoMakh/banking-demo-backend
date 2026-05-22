@@ -17,6 +17,7 @@ spring:
 app:
   jwt:
     secret: ${JWT_SECRET}
-    expiration-ms: 3600000
+    expiration-ms: 600000
+    refresh-expiration-ms: 86400000
   fx:
     usd-to-ils: 3.70
