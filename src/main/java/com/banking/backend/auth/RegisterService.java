@@ -1,7 +1,6 @@
 package com.banking.backend.auth;
 
-import com.banking.backend.account.Account;
-import com.banking.backend.account.AccountRepository;
+import com.banking.backend.account.AccountService;
 import com.banking.backend.customer.Customer;
 import com.banking.backend.customer.CustomerRepository;
 import com.banking.backend.customer.CustomerRole;
@@ -13,25 +12,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 
 @Service
 public class RegisterService {
 
     private final CustomerRepository customerRepository;
-    private final AccountRepository accountRepository;
+    private final AccountService accountService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final long expirationMs;
 
     public RegisterService(CustomerRepository customerRepository,
-                           AccountRepository accountRepository,
+                           AccountService accountService,
                            PasswordEncoder passwordEncoder,
                            JwtService jwtService,
                            @Value("${app.jwt.expiration-ms}") long expirationMs) {
         this.customerRepository = customerRepository;
-        this.accountRepository = accountRepository;
+        this.accountService = accountService;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.expirationMs = expirationMs;
@@ -52,13 +50,7 @@ public class RegisterService {
         customer.setPasswordHash(passwordEncoder.encode(req.password()));
         customer = customerRepository.save(customer);
 
-        Account account = new Account();
-        account.setAccountNo(nextAccountNo());
-        account.setCustomer(customer);
-        account.setBalance(BigDecimal.ZERO);
-        account.setReservedBalance(BigDecimal.ZERO);
-        account.setCurrency("ILS");
-        accountRepository.save(account);
+        accountService.create(customer, "ILS");
 
         String token = jwtService.generateToken(customer.getCustomerNo(), customer.getRole().name());
         return new LoginResponse(
@@ -71,9 +63,5 @@ public class RegisterService {
 
     private String nextCustomerNo() {
         return String.format("C%03d", customerRepository.findMaxUserCustomerNumber() + 1);
-    }
-
-    private String nextAccountNo() {
-        return "ACC" + (accountRepository.findMaxAccountNumber() + 1);
     }
 }

@@ -1,6 +1,9 @@
 /home/alimakh/Documents/Banking/backend/src/main/java/com/banking/backend/BackendApplication.java
 /home/alimakh/Documents/Banking/backend/src/main/java/com/banking/backend/account/Account.java
+/home/alimakh/Documents/Banking/backend/src/main/java/com/banking/backend/account/AccountController.java
 /home/alimakh/Documents/Banking/backend/src/main/java/com/banking/backend/account/AccountRepository.java
+/home/alimakh/Documents/Banking/backend/src/main/java/com/banking/backend/account/AccountService.java
+/home/alimakh/Documents/Banking/backend/src/main/java/com/banking/backend/account/CreateAccountRequest.java
 /home/alimakh/Documents/Banking/backend/src/main/java/com/banking/backend/admin/AdminController.java
 /home/alimakh/Documents/Banking/backend/src/main/java/com/banking/backend/admin/AdminCustomerDetailDto.java
 /home/alimakh/Documents/Banking/backend/src/main/java/com/banking/backend/admin/AdminCustomerDto.java

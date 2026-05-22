@@ -4,11 +4,13 @@ com/banking/backend/security/JwtAuthenticationFilter.class
 com/banking/backend/transfer/FxService.class
 com/banking/backend/transfer/InsufficientFundsException.class
 com/banking/backend/dashboard/AccountSummaryDto.class
+com/banking/backend/account/CreateAccountRequest.class
 com/banking/backend/transaction/TransactionSpecification.class
 com/banking/backend/admin/BalanceAdjustRequest.class
 com/banking/backend/transaction/TransactionService.class
 com/banking/backend/transaction/TransactionStatus.class
 com/banking/backend/customer/CustomerRole.class
+com/banking/backend/account/AccountService.class
 com/banking/backend/BackendApplication.class
 com/banking/backend/dashboard/DashboardService.class
 com/banking/backend/transaction/dto/TransactionFilter.class
@@ -34,6 +36,7 @@ com/banking/backend/transfer/FxController.class
 com/banking/backend/account/Account.class
 com/banking/backend/customer/CustomerRepository.class
 com/banking/backend/account/AccountRepository.class
+com/banking/backend/account/AccountController.class
 com/banking/backend/dashboard/DashboardController.class
 com/banking/backend/security/CustomUserDetailsService.class
 com/banking/backend/admin/AdminCustomerDto.class
