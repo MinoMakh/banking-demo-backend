@@ -34,10 +34,6 @@ public class Transaction {
     @Column(nullable = false, precision = 19, scale = 4)
     private BigDecimal amount;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TransactionStatus status;
-
     @Column(name = "transaction_date", nullable = false)
     private LocalDateTime transactionDate;
 }

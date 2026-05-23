@@ -4,7 +4,6 @@ import com.banking.backend.account.Account;
 import com.banking.backend.account.AccountRepository;
 import com.banking.backend.transaction.Transaction;
 import com.banking.backend.transaction.TransactionRepository;
-import com.banking.backend.transaction.TransactionStatus;
 import com.banking.backend.transaction.TransactionType;
 import com.banking.backend.transaction.dto.TransactionDto;
 import jakarta.persistence.EntityNotFoundException;
@@ -59,34 +58,24 @@ public class TransferService {
 
         LocalDateTime now = LocalDateTime.now();
         String refBase = "TRF-" + UUID.randomUUID().toString().replace("-", "").substring(0, 16);
-
-        // Phase 1 — Reserve
-        source.setReservedBalance(source.getReservedBalance().add(req.amount()));
-        Transaction debit = newTransaction(source, TransactionType.DEBIT, req.amount(),
-                TransactionStatus.PENDING, refBase + "-D", now);
-        debit = transactionRepository.save(debit);
-
-        // Phase 2 — Commit
         BigDecimal destAmount = fxService.convert(req.amount(), source.getCurrency(), dest.getCurrency());
-        source.setBalance(source.getBalance().subtract(req.amount()));
-        source.setReservedBalance(source.getReservedBalance().subtract(req.amount()));
-        dest.setBalance(dest.getBalance().add(destAmount));
-        debit.setStatus(TransactionStatus.SUCCESS);
 
-        Transaction credit = newTransaction(dest, TransactionType.CREDIT, destAmount,
-                TransactionStatus.SUCCESS, refBase + "-C", now);
-        transactionRepository.save(credit);
+        source.setBalance(source.getBalance().subtract(req.amount()));
+        dest.setBalance(dest.getBalance().add(destAmount));
+
+        Transaction debit = newTransaction(source, TransactionType.DEBIT, req.amount(), refBase + "-D", now);
+        debit = transactionRepository.save(debit);
+        transactionRepository.save(newTransaction(dest, TransactionType.CREDIT, destAmount, refBase + "-C", now));
 
         return TransactionDto.from(debit);
     }
 
     private Transaction newTransaction(Account account, TransactionType type, BigDecimal amount,
-                                       TransactionStatus status, String ref, LocalDateTime date) {
+                                       String ref, LocalDateTime date) {
         Transaction tx = new Transaction();
         tx.setAccount(account);
         tx.setType(type);
         tx.setAmount(amount);
-        tx.setStatus(status);
         tx.setTransactionRef(ref);
         tx.setTransactionDate(date);
         return tx;

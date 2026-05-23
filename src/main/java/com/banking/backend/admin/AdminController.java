@@ -1,6 +1,5 @@
 package com.banking.backend.admin;
 
-import com.banking.backend.transaction.TransactionStatus;
 import com.banking.backend.transaction.TransactionType;
 import com.banking.backend.transaction.dto.TransactionDto;
 import com.banking.backend.transaction.dto.TransactionFilter;
@@ -56,11 +55,10 @@ public class AdminController {
     public ResponseEntity<Page<TransactionDto>> listTransactions(
             @RequestParam(required = false) Long accountId,
             @RequestParam(required = false) TransactionType type,
-            @RequestParam(required = false) TransactionStatus status,
             @RequestParam(required = false) LocalDate from,
             @RequestParam(required = false) LocalDate to,
             @PageableDefault(size = 20, sort = "transactionDate") Pageable pageable) {
-        TransactionFilter filter = new TransactionFilter(accountId, type, status, from, to);
+        TransactionFilter filter = new TransactionFilter(accountId, type, from, to);
         return ResponseEntity.ok(adminService.listTransactions(filter, pageable));
     }
 

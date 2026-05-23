@@ -14,7 +14,6 @@ public class TransactionSpecification {
         return base
                 .and(hasAccount(f.accountId()))
                 .and(hasType(f.type()))
-                .and(hasStatus(f.status()))
                 .and(dateFrom(f.from()))
                 .and(dateTo(f.to()));
     }
@@ -31,11 +30,6 @@ public class TransactionSpecification {
     private static Specification<Transaction> hasType(TransactionType type) {
         return (root, query, cb) ->
                 type == null ? null : cb.equal(root.get("type"), type);
-    }
-
-    private static Specification<Transaction> hasStatus(TransactionStatus status) {
-        return (root, query, cb) ->
-                status == null ? null : cb.equal(root.get("status"), status);
     }
 
     private static Specification<Transaction> dateFrom(java.time.LocalDate from) {

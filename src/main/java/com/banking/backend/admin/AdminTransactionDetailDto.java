@@ -1,7 +1,6 @@
 package com.banking.backend.admin;
 
 import com.banking.backend.transaction.Transaction;
-import com.banking.backend.transaction.TransactionStatus;
 import com.banking.backend.transaction.TransactionType;
 import com.banking.backend.customer.Customer;
 
@@ -15,7 +14,6 @@ public record AdminTransactionDetailDto(
         String currency,
         TransactionType type,
         BigDecimal amount,
-        TransactionStatus status,
         LocalDateTime transactionDate,
         Long customerId,
         String customerNo,
@@ -30,7 +28,6 @@ public record AdminTransactionDetailDto(
                 t.getAccount().getCurrency(),
                 t.getType(),
                 t.getAmount(),
-                t.getStatus(),
                 t.getTransactionDate(),
                 c.getId(),
                 c.getCustomerNo(),

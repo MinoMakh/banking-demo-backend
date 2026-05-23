@@ -6,7 +6,6 @@ import com.banking.backend.customer.Customer;
 import com.banking.backend.customer.CustomerRepository;
 import com.banking.backend.transaction.Transaction;
 import com.banking.backend.transaction.TransactionRepository;
-import com.banking.backend.transaction.TransactionStatus;
 import com.banking.backend.transaction.TransactionType;
 import com.banking.backend.transaction.dto.TransactionDto;
 import jakarta.persistence.EntityNotFoundException;
@@ -68,7 +67,6 @@ public class DashboardService {
                                    LocalDate from, LocalDate to) {
         Specification<Transaction> spec = accountIn(accountIds)
                 .and((root, query, cb) -> cb.equal(root.get("type"), type))
-                .and((root, query, cb) -> cb.equal(root.get("status"), TransactionStatus.SUCCESS))
                 .and((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("transactionDate"), from.atStartOfDay()))
                 .and((root, query, cb) -> cb.lessThan(root.get("transactionDate"), to.atStartOfDay()));
 

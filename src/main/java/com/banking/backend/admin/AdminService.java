@@ -8,7 +8,6 @@ import com.banking.backend.dashboard.AccountSummaryDto;
 import com.banking.backend.transaction.Transaction;
 import com.banking.backend.transaction.TransactionRepository;
 import com.banking.backend.transaction.TransactionSpecification;
-import com.banking.backend.transaction.TransactionStatus;
 import com.banking.backend.transaction.TransactionType;
 import com.banking.backend.transaction.dto.TransactionDto;
 import com.banking.backend.transaction.dto.TransactionFilter;
@@ -100,7 +99,6 @@ public class AdminService {
         tx.setAccount(account);
         tx.setAmount(absAmount);
         tx.setType(credit ? TransactionType.CREDIT : TransactionType.DEBIT);
-        tx.setStatus(TransactionStatus.SUCCESS);
         tx.setTransactionDate(LocalDateTime.now());
         tx.setTransactionRef("ADJ-" + UUID.randomUUID().toString().replace("-", "").substring(0, 16));
         transactionRepository.save(tx);

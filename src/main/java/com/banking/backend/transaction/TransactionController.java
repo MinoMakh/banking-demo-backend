@@ -25,13 +25,12 @@ public class TransactionController {
     public ResponseEntity<Page<TransactionDto>> list(
             @RequestParam(required = false) Long accountId,
             @RequestParam(required = false) TransactionType type,
-            @RequestParam(required = false) TransactionStatus status,
             @RequestParam(required = false) LocalDate from,
             @RequestParam(required = false) LocalDate to,
             @PageableDefault(size = 20, sort = "transactionDate") Pageable pageable) {
 
         String customerNo = SecurityContextHolder.getContext().getAuthentication().getName();
-        TransactionFilter filter = new TransactionFilter(accountId, type, status, from, to);
+        TransactionFilter filter = new TransactionFilter(accountId, type, from, to);
         return ResponseEntity.ok(transactionService.getTransactions(filter, pageable, customerNo));
     }
 

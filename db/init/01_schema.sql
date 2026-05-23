@@ -37,12 +37,10 @@ CREATE TABLE transactions (
   account_id        BIGINT UNSIGNED NOT NULL,
   type              ENUM('DEBIT','CREDIT') NOT NULL,
   amount            DECIMAL(19,4) NOT NULL,
-  status            ENUM('SUCCESS','FAILED','PENDING') NOT NULL,
   transaction_date  DATETIME NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY uk_transactions_ref (transaction_ref),
   KEY idx_tx_account_date (account_id, transaction_date DESC),
-  KEY idx_tx_status (status),
   FOREIGN KEY (account_id) REFERENCES accounts(id),
   CHECK (amount > 0)
 );

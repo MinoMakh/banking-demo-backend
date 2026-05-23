@@ -40,7 +40,6 @@
 /home/alimakh/Documents/Banking/backend/src/main/java/com/banking/backend/transaction/TransactionRepository.java
 /home/alimakh/Documents/Banking/backend/src/main/java/com/banking/backend/transaction/TransactionService.java
 /home/alimakh/Documents/Banking/backend/src/main/java/com/banking/backend/transaction/TransactionSpecification.java
-/home/alimakh/Documents/Banking/backend/src/main/java/com/banking/backend/transaction/TransactionStatus.java
 /home/alimakh/Documents/Banking/backend/src/main/java/com/banking/backend/transaction/TransactionType.java
 /home/alimakh/Documents/Banking/backend/src/main/java/com/banking/backend/transaction/dto/TransactionDto.java
 /home/alimakh/Documents/Banking/backend/src/main/java/com/banking/backend/transaction/dto/TransactionFilter.java

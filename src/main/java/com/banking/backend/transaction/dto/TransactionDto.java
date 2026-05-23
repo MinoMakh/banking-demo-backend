@@ -1,7 +1,6 @@
 package com.banking.backend.transaction.dto;
 
 import com.banking.backend.transaction.Transaction;
-import com.banking.backend.transaction.TransactionStatus;
 import com.banking.backend.transaction.TransactionType;
 
 import java.math.BigDecimal;
@@ -14,7 +13,6 @@ public record TransactionDto(
         String currency,
         TransactionType type,
         BigDecimal amount,
-        TransactionStatus status,
         LocalDateTime transactionDate
 ) {
     public static TransactionDto from(Transaction t) {
@@ -25,7 +23,6 @@ public record TransactionDto(
                 t.getAccount().getCurrency(),
                 t.getType(),
                 t.getAmount(),
-                t.getStatus(),
                 t.getTransactionDate()
         );
     }

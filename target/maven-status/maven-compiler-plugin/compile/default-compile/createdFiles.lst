@@ -35,7 +35,6 @@ com/banking/backend/auth/RefreshResponse.class
 com/banking/backend/transfer/TransferRequest.class
 com/banking/backend/admin/AdminService.class
 com/banking/backend/transfer/InsufficientFundsException.class
-com/banking/backend/transaction/TransactionStatus.class
 com/banking/backend/BackendApplication.class
 com/banking/backend/account/AccountType.class
 com/banking/backend/transaction/dto/TransactionFilter.class
